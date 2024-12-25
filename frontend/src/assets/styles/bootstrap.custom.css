@@ -87,7 +87,7 @@
   --bs-body-font-size: 1rem;
   --bs-body-font-weight: 400;
   --bs-body-line-height: 1.5;
-  --bs-body-color: #6f7d7e;
+  --bs-body-color: #7b8a8b;
   --bs-emphasis-color: #000;
   --bs-emphasis-color-rgb: 0, 0, 0;
   --bs-secondary-color: rgba(123, 138, 139, 0.75);
@@ -96,7 +96,7 @@
   --bs-secondary-bg-rgb: 189, 206, 207;
   --bs-tertiary-color: rgba(123, 138, 139, 0.5);
   --bs-tertiary-color-rgb: 123, 138, 139;
-  --bs-tertiary-bg: #6f7d7e;
+  --bs-tertiary-bg: #f4f4f4;
   --bs-tertiary-bg-rgb: 244, 244, 244;
   --bs-body-bg: #fff;
   --bs-body-bg-rgb: 255, 255, 255;

@@ -1,39 +1,60 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { updateCart } from "../utils/cartUtils";
+import { createSlice } from '@reduxjs/toolkit';
+import { updateCart } from '../utils/cartUtils';
 
+const initialState = localStorage.getItem('cart')
+  ? JSON.parse(localStorage.getItem('cart'))
+  : { cartItems: [], shippingAddress: {}, paymentMethod: 'PayPal' };
 
-//store in local Storage
-const initialState=localStorage.getItem("cart") ? JSON.parse(localStorage.getItem("cart")): {cartItems: []}
-const addDecimals=(num)=>{return (Math.round(num*100)/100).toFixed(2)}
+const cartSlice = createSlice({
+  name: 'cart',
+  initialState,
+  reducers: {
+    addToCart: (state, action) => {
+      // NOTE: we don't need user, rating, numReviews or reviews
+      // in the cart
+      const { user, rating, numReviews, reviews, ...item } = action.payload;
 
-const cartSlice=createSlice({
-    name:"cart",
-    initialState,
-    reducers:{
+      const existItem = state.cartItems.find((x) => x._id === item._id);
 
-        addToCart: (state,action)=>{
-            // The item being added to the cart
-            const item=action.payload
-            const exitItem=state.cartItems.find((x)=>x._id===item._id)
+      if (existItem) {
+        state.cartItems = state.cartItems.map((x) =>
+          x._id === existItem._id ? item : x
+        );
+      } else {
+        state.cartItems = [...state.cartItems, item];
+      }
 
-            if(exitItem){
-                state.cartItems=state.cartItems.map((x)=>x._id === exitItem._id ? item : x)
-            }else{
-                //adds the new item at the end of the array
-                state.cartItems=[...state.cartItems,item]
-            }
-            return updateCart(state)
-           
-        },
-        removeFromCart: (state,action)=>{
-            state.cartItems=state.cartItems.filter((x)=>x._id !==action.payload)
+      return updateCart(state, item);
+    },
+    removeFromCart: (state, action) => {
+      state.cartItems = state.cartItems.filter((x) => x._id !== action.payload);
+      return updateCart(state);
+    },
+    saveShippingAddress: (state, action) => {
+      state.shippingAddress = action.payload;
+      localStorage.setItem('cart', JSON.stringify(state));
+    },
+    savePaymentMethod: (state, action) => {
+      state.paymentMethod = action.payload;
+      localStorage.setItem('cart', JSON.stringify(state));
+    },
+    clearCartItems: (state, action) => {
+      state.cartItems = [];
+      localStorage.setItem('cart', JSON.stringify(state));
+    },
+    // NOTE: here we need to reset state for when a user logs out so the next
+    // user doesn't inherit the previous users cart and shipping
+    resetCart: (state) => (state = initialState),
+  },
+});
 
-            return updateCart(state)
-        }
+export const {
+  addToCart,
+  removeFromCart,
+  saveShippingAddress,
+  savePaymentMethod,
+  clearCartItems,
+  resetCart,
+} = cartSlice.actions;
 
-
-    }
-
-})
-export const {addToCart,removeFromCart} =cartSlice.actions
-export default cartSlice.reducer
+export default cartSlice.reducer;

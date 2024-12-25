@@ -4,7 +4,7 @@ import React from 'react'
 function Loader() {
   return (
     <div>
-      <Spinner>
+      <Spinner
         animation="border"
         role="status"
         style={{
@@ -17,7 +17,7 @@ function Loader() {
 
         }
 
-        }
+        }>
       </Spinner>
     </div>
   )
